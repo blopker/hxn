@@ -1,0 +1,27 @@
+{
+  "name": "HXN",
+  "version": "1.0.0",
+  "description": "Mobile Hacker News Reader",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify -o dist/js/index.js js/index.js",
+    "watch": "watchify --debug -v -o dist/js/index.js js/index.js"
+  },
+  "author": "",
+  "license": "MIT",
+  "browserify": {
+    "transform": [
+      "hbsfy"
+    ]
+  },
+  "dependencies": {
+    "async": "^1.2.0",
+    "handlebars": "^3.0.3",
+    "hbsfy": "^2.2.1"
+  },
+  "devDependencies": {
+    "browserify": "^10.2.3",
+    "watchify": "^3.2.1"
+  }
+}
