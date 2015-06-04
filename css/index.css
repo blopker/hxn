@@ -1,0 +1,24 @@
+h1 {
+	font-size: 3rem;
+}
+
+a {
+	color: #282828;
+}
+
+.list-item {
+	border-top: 1px solid gray;
+	position: relative;
+}
+
+.title {
+	margin-right: 50px;
+}
+
+aside {
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 50px;
+}
+
