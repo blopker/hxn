@@ -10,5 +10,5 @@ build: prep
 watch: prep
 	@npm run watch
 
-deploy:
-	@rsync -ahvc ./index.html ./dist gouda@blopker.com:public/dev/hxn
+deploy: build
+	@rsync -ahvc ./index.html ./css ./dist gouda@blopker.com:public/dev/hxn
