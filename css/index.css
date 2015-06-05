@@ -1,10 +1,13 @@
-h3 {
-	margin: 0;
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
 }
 
-a {
-	color: #282828;
-	text-decoration: none;
+
+h3 {
+	margin: 0;
 }
 
 .list-item {
@@ -12,13 +15,30 @@ a {
 	position: relative;
 }
 
+.list-item a {
+	text-decoration: none;
+	color: #292929;
+}
+
 .title {
 	margin-right: 50px;
 }
 
+.story {
+	padding: 10px;
+	margin-right: 50px;
+}
+
 aside {
+	padding: 10px;
+	text-align: center;
 	position: absolute;
 	right: 0;
 	top: 0;
 	width: 50px;
+}
+
+footer {
+	text-align: center;
+	padding: 10px;
 }
