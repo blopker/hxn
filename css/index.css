@@ -1,13 +1,14 @@
-h1 {
-	font-size: 3rem;
+h3 {
+	margin: 0;
 }
 
 a {
 	color: #282828;
+	text-decoration: none;
 }
 
 .list-item {
-	border-top: 1px solid gray;
+	border-bottom: 1px solid gray;
 	position: relative;
 }
 
@@ -21,4 +22,3 @@ aside {
 	top: 0;
 	width: 50px;
 }
-

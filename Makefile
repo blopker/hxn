@@ -3,6 +3,7 @@ all: build
 prep:
 	@rm -rf dist
 	@mkdir -p dist/js
+	@npm install
 
 build: prep
 	@npm run build

@@ -1,4 +1,5 @@
 var async = require('async');
+var url = require('url');
 var itemTpl = require('./templates/list-item.hbs');
 
 var myFirebaseRef = new Firebase("https://hacker-news.firebaseio.com/v0/");
@@ -13,9 +14,14 @@ function display (snapshot) {
 	});
 }
 
+function createItem(item) {
+	item.host = url.parse(item.url).host;
+	return item;
+}
+
 function getItem (id, cb) {
 	myFirebaseRef.child("item/" + id).once("value", function(snapshot) {
-		cb(null, snapshot.val());
+		cb(null, createItem(snapshot.val()));
 	});
 }
 

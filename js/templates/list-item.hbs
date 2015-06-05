@@ -1,11 +1,14 @@
 <div class="list-item">
-	<div class="title">
-		<h1><a href="{{ url }}">{{ title }}</a></h1>
-	</div>
-	<aside>
-		<a href="https://news.ycombinator.com/item?id={{ id }}">
+	<a href="{{ url }}">
+		<div class="story">
+			<h3>{{ title }}</h3>
+			<div class="site">{{ host }}</div>
+		</div>
+	</a>
+	<a href="https://news.ycombinator.com/item?id={{ id }}">
+		<aside>
 			<div class="comment-count">{{ descendants }}</div>
-		</a>
-		<div class="score">{{ score }}</div>
-	</aside>
+			<div class="score">{{ score }}</div>
+		</aside>
+	</a>
 </div>
