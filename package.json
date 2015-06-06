@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify -o dist/js/index.js js/index.js",
+    "build": "browserify -o dist/js/index.js js/index.js && uglifyjs dist/js/index.js -o dist/js/index.js",
     "watch": "beefy js/index.js:dist/js/index.js --live"
   },
   "author": "",
@@ -25,6 +25,7 @@
   "devDependencies": {
     "beefy": "^2.1.5",
     "browserify": "^10.2.3",
+    "uglify-js": "^2.4.23",
     "watchify": "^3.2.1"
   }
 }
