@@ -10,6 +10,7 @@ var itemsContainer = document.querySelector('.items');
 
 function render (ids) {
 	async.map(ids, getItem, function(err, items) {
+        itemsContainer.innerHTML = '';
 		items.forEach(function(item) {
 			itemsContainer.innerHTML += itemTpl(item);
 		});
