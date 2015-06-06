@@ -8,9 +8,8 @@ var itemTpl = require('./templates/list-item.hbs');
 var myFirebaseRef = new Firebase("https://hacker-news.firebaseio.com/v0/");
 var itemsContainer = document.querySelector('.items');
 
-function display (snapshot) {
-	var top = snapshot.val().slice(0, 30);
-	async.map(top, getItem, function(err, items) {
+function render (ids) {
+	async.map(ids, getItem, function(err, items) {
 		items.forEach(function(item) {
 			itemsContainer.innerHTML += itemTpl(item);
 		});
@@ -27,9 +26,23 @@ function createItem(item) {
 }
 
 function getItem (id, cb) {
-	myFirebaseRef.child("item/" + id).once("value", function(snapshot) {
-		cb(null, createItem(snapshot.val()));
-	});
+    cache.getItem('item:' + id, function(err, item) {
+        if (item) {return cb(null, createItem(item))};
+
+        myFirebaseRef.child('item/' + id).once('value', function(snapshot) {
+            item = snapshot.val();
+            cache.setItem('item:' + id, item);
+            cb(null, createItem(item));
+        });
+    });
 }
 
-myFirebaseRef.child("topstories").once("value", display);
+myFirebaseRef.child('topstories').once('value', function(snapshot) {
+	var ids = snapshot.val().slice(0, 30);
+	cache.setItem('topstories', ids);
+	render(ids);
+});
+
+cache.getItem('topstories', function(err, ids) {
+	render(ids);
+});
