@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "browserify -o dist/js/index.js js/index.js",
-    "watch": "watchify --debug -v -o dist/js/index.js js/index.js"
+    "watch": "beefy js/index.js:dist/js/index.js --live"
   },
   "author": "",
   "license": "MIT",
@@ -18,9 +18,12 @@
   "dependencies": {
     "async": "^1.2.0",
     "handlebars": "^3.0.3",
-    "hbsfy": "^2.2.1"
+    "hbsfy": "^2.2.1",
+    "jquery": "^2.1.4",
+    "storage-lru": "^0.1.0"
   },
   "devDependencies": {
+    "beefy": "^2.1.5",
     "browserify": "^10.2.3",
     "watchify": "^3.2.1"
   }

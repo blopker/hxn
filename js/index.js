@@ -1,5 +1,8 @@
 var async = require('async');
 var url = require('url');
+
+var cache = require('./cache');
+
 var itemTpl = require('./templates/list-item.hbs');
 
 var myFirebaseRef = new Firebase("https://hacker-news.firebaseio.com/v0/");
@@ -15,6 +18,10 @@ function display (snapshot) {
 }
 
 function createItem(item) {
+	if (!item.url) {
+		item.url = 'https://news.ycombinator.com/item?id=' + item.id;
+	}
+
 	item.host = url.parse(item.url).host;
 	return item;
 }

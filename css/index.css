@@ -11,7 +11,7 @@ h3 {
 }
 
 .list-item {
-	border-bottom: 1px solid gray;
+	border-bottom: 1px solid rgb(195, 195, 195);
 	position: relative;
 }
 
@@ -27,9 +27,16 @@ h3 {
 .story {
 	padding: 10px;
 	margin-right: 50px;
+	min-height: 60px;
+}
+
+.host {
+	color: rgb(118, 118, 118);
 }
 
 aside {
+	border-left: 1px solid rgb(195, 195, 195);
+	height: 100%;
 	padding: 10px;
 	text-align: center;
 	position: absolute;
