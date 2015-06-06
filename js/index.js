@@ -1,3 +1,5 @@
+'use strict';
+
 var async = require('async');
 var url = require('url');
 
@@ -5,17 +7,8 @@ var cache = require('./cache');
 
 var itemTpl = require('./templates/list-item.hbs');
 
-var myFirebaseRef = new Firebase("https://hacker-news.firebaseio.com/v0/");
+var myFirebaseRef = new Firebase('https://hacker-news.firebaseio.com/v0/');
 var itemsContainer = document.querySelector('.items');
-
-function render (ids) {
-	async.map(ids, getItem, function(err, items) {
-        itemsContainer.innerHTML = '';
-		items.forEach(function(item) {
-			itemsContainer.innerHTML += itemTpl(item);
-		});
-	});
-}
 
 function createItem(item) {
 	if (!item.url) {
@@ -28,12 +21,21 @@ function createItem(item) {
 
 function getItem (id, cb) {
     cache.getItem('item:' + id, function(err, item) {
-        if (item) {return cb(null, createItem(item))};
+        if (item) { cb(null, createItem(item)); }
 
         myFirebaseRef.child('item/' + id).once('value', function(snapshot) {
-            item = snapshot.val();
-            cache.setItem('item:' + id, item);
-            cb(null, createItem(item));
+            var freshItem = snapshot.val();
+            cache.setItem('item:' + id, freshItem);
+            if (!item) { return cb(null, createItem(freshItem)); }
+        });
+    });
+}
+
+function render (ids) {
+    async.map(ids, getItem, function(err, items) {
+        itemsContainer.innerHTML = '';
+        items.forEach(function(item) {
+            itemsContainer.innerHTML += itemTpl(item);
         });
     });
 }
