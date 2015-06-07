@@ -25,6 +25,12 @@ h3 {
 	color: #292929;
 }
 
+.list-item a:visited {
+	text-decoration: none;
+	color: rgb(118, 118, 118);
+}
+
+
 .title {
 	margin-right: 50px;
 }
