@@ -1,10 +1,9 @@
 'use strict';
 
-var $ = require('jquery');
 var itemTpl = require('./templates/list-item.hbs');
 
 function StoryListView (el) {
-    this.$el = $(el);
+    this.$el = window.document.querySelector(el);
 }
 
 StoryListView.prototype.render = function(stories) {
@@ -12,11 +11,7 @@ StoryListView.prototype.render = function(stories) {
     stories.forEach(function(item) {
         html += itemTpl(item);
     });
-    this.$el.html(html);
-};
-
-StoryListView.prototype.error = function(error) {
-    this.$el.html(error);
+    this.$el.innerHTML = html;
 };
 
 exports.StoryListView = StoryListView;
