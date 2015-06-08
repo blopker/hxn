@@ -20,7 +20,7 @@ function createItem(item) {
 
 function getFromCache (cb) {
     cache.getItem('topstories', function(err, ids) {
-        if (err) { cb(err, null); }
+        if (err) { return cb(err, null); }
         async.map(ids, function(id, cb2) {
             cache.getItem('item:' + id, cb2);
         }, function(err2, items) {
@@ -50,7 +50,7 @@ function getFromAPI (cb) {
 
 var list = new views.StoryListView('.items');
 function render (err, stories) {
-    if (err) { list.error(err); }
+    if (err) { return; }
     list.render(stories);
 }
 

@@ -12,4 +12,4 @@ watch: prep
 	@npm run watch
 
 deploy: build
-	@rsync -ahvc ./index.html ./css ./dist gouda@blopker.com:public/dev/hxn
+	@rsync -ahvc ./index.html ./css ./dist static@kbl.io:public/dev/hxn
