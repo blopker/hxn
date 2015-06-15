@@ -12,7 +12,7 @@ let commentView = new views.CommentView('#container');
 let scrollPos = document.body.scrollTop;
 
 page('/', function () {
-    fb.getListCache(function (_, stories) {
+    fb.getList(false, function (_, stories) {
         listView.render(stories);
         document.body.scrollTop = scrollPos;
     });
@@ -31,4 +31,4 @@ page({
     dispatch: false
 });
 
-fb.getListAPI((_, stories) => listView.render(stories));
+fb.getList(true, (_, stories) => listView.render(stories));

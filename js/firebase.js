@@ -66,9 +66,20 @@ function getFromAPI (cb) {
     });
 }
 
+function getList(force, cb) {
+    if (force) {
+        return getFromAPI(cb);
+    }
+
+    getFromCache(function (err, list) {
+        if (!err) {
+            return cb(err, list);
+        }
+        getFromAPI(cb);
+    });
+}
+
 module.exports = {
-    getListAPI: getFromAPI,
-    getListCache: getFromCache,
-    // getItem: getItem,
+    getList: getList,
     getComment: getComment
 };
