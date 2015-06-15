@@ -18,8 +18,8 @@ page('/comments/:id', function (ctx) {
 });
 
 page({
-    hashbang: true
+    hashbang: true,
+    dispatch: false
 });
 
-fb.getListCache((_, stories) => listView.render(stories));
 fb.getListAPI((_, stories) => listView.render(stories));
