@@ -4,7 +4,7 @@ var StorageLRU = require('storage-lru').StorageLRU;
 var asyncify = require('storage-lru').asyncify;
 var lru = new StorageLRU(asyncify(localStorage));
 
-var opts = {json: true, cacheControl: 'max-age=86400'};
+var opts = {json: true, cacheControl: 'max-age=1200'};
 
 module.exports = {
 	'setItem': function(key, value, cb) {

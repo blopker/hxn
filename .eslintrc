@@ -1,6 +1,4 @@
 ---
-# 23andMe JS linting rules for eslint.
-
 globals:
   $: false
   _: false
@@ -22,3 +20,25 @@ rules:
   strict: 2
   quotes: [2, single]
   max-len: [2, 120, 4]
+
+ecmaFeatures:
+  arrowFunctions: true
+  binaryLiterals: true
+  blockBindings: true
+  classes: true
+  defaultParams: true
+  destructuring: true
+  forOf: true
+  generators: true
+  modules: true
+  objectLiteralComputedProperties: true
+  objectLiteralDuplicateProperties: true
+  objectLiteralShorthandMethods: true
+  objectLiteralShorthandProperties: true
+  octalLiterals: true
+  regexUFlag: true
+  regexYFlag: true
+  restParams: true
+  spread: true
+  superInFunctions: true
+  templateStrings: true

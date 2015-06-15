@@ -12,7 +12,8 @@
   "license": "MIT",
   "browserify": {
     "transform": [
-      "hbsfy"
+      "hbsfy",
+      "babelify"
     ]
   },
   "dependencies": {
@@ -20,9 +21,12 @@
     "handlebars": "^3.0.3",
     "hbsfy": "^2.2.1",
     "jquery": "^2.1.4",
-    "storage-lru": "^0.1.0"
+    "page": "^1.6.3",
+    "storage-lru": "^0.1.0",
+    "whatwg-fetch": "^0.9.0"
   },
   "devDependencies": {
+    "babelify": "^6.1.2",
     "beefy": "^2.1.5",
     "browserify": "^10.2.3",
     "uglify-js": "^2.4.23",

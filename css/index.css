@@ -31,18 +31,23 @@ h3 {
 }
 
 
-.title {
+.list-item .title {
 	margin-right: 50px;
 }
 
-.story {
+.list-item .story {
 	padding: 10px;
 	margin-right: 70px;
 	min-height: 60px;
 }
 
-.host {
+.list-item .host {
 	color: rgb(118, 118, 118);
+}
+
+.comment {
+    padding: 10px;
+    border-left: 1px solid gray;
 }
 
 aside {
