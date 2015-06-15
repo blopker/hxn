@@ -11,7 +11,6 @@ let commentView = new views.CommentView('#container');
 
 page('/', function () {
     fb.getListCache((_, stories) => listView.render(stories));
-    fb.getListAPI((_, stories) => listView.render(stories));
 });
 
 page('/comments/:id', function (ctx) {
@@ -21,3 +20,6 @@ page('/comments/:id', function (ctx) {
 page({
     hashbang: true
 });
+
+fb.getListCache((_, stories) => listView.render(stories));
+fb.getListAPI((_, stories) => listView.render(stories));
