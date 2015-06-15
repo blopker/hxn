@@ -20,9 +20,10 @@ function createItem(item) {
 
 function getItem(id, cb) {
     cache.getItem('item:' + id, function (err, item) {
-        if (!err) { return cb(null, item); }
+        if (item) { return cb(err, item); }
         fire.child('item/' + id).once('value', function (snap) {
             let newItem = snap.val();
+            if (!newItem) { return cb(null, {}); }
             cache.setItem('item:' + id, newItem);
             cb(null, createItem(newItem));
         });
@@ -42,6 +43,7 @@ function getComment(commentID, cb) {
 function createList(ids, cb) {
     async.map(ids, getItem, function(err2, items) {
         items = items.filter(function(item) { return item !== undefined; });
+        items = items.filter(function(item) { return item !== null; });
         cb(null, items.map(createItem));
     });
 }

@@ -9,12 +9,21 @@ let fb = require('./firebase');
 let listView = new views.StoryListView('#container');
 let commentView = new views.CommentView('#container');
 
+let scrollPos = document.body.scrollTop;
+
 page('/', function () {
-    fb.getListCache((_, stories) => listView.render(stories));
+    fb.getListCache(function (_, stories) {
+        listView.render(stories);
+        document.body.scrollTop = scrollPos;
+    });
 });
 
 page('/comments/:id', function (ctx) {
-    fb.getComment(ctx.params.id, (_, comment) => commentView.render(comment));
+    scrollPos = document.body.scrollTop;
+    fb.getComment(ctx.params.id, function (_, comment) {
+        commentView.render(comment);
+        document.body.scrollTop = 0;
+    });
 });
 
 page({
