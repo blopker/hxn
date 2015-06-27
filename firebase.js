@@ -1,32 +1,24 @@
 'use strict';
 
+let Firebase = require('firebase');
 let async = require('async');
 let url = require('url');
 
-let cache = require('./cache');
-
 let fire = new Firebase('https://hacker-news.firebaseio.com/v0/');
-
-const topstoriesURL = 'https://hacker-news.firebaseio.com/v0/topstories.json';
 
 function createItem(item) {
     if (!item.url) {
         item.url = 'https://news.ycombinator.com/item?id=' + item.id;
     }
-
     item.host = url.parse(item.url).host;
     return item;
 }
 
 function getItem(id, cb) {
-    cache.getItem('item:' + id, function (err, item) {
-        if (item) { return cb(err, item); }
-        fire.child('item/' + id).once('value', function (snap) {
-            let newItem = snap.val();
-            if (!newItem) { return cb(null, {}); }
-            cache.setItem('item:' + id, newItem);
-            cb(null, createItem(newItem));
-        });
+    fire.child('item/' + id).once('value', function (snap) {
+        let newItem = snap.val();
+        if (!newItem) { return cb(null, {}); }
+        cb(null, createItem(newItem));
     });
 }
 
@@ -48,34 +40,10 @@ function createList(ids, cb) {
     });
 }
 
-function getFromCache (cb) {
-    cache.getItem('topstories', function(err, ids) {
-        if (err) { return cb(err, []); }
+function getList (cb) {
+    fire.child('topstories').once('value', function (snap) {
+        let ids = snap.val().slice(0, 30);
         createList(ids, cb);
-    });
-}
-
-
-function getFromAPI (cb) {
-    fetch(topstoriesURL)
-    .then(resp => resp.json())
-    .then(function (json) {
-        let ids = json.slice(0, 30);
-        cache.setItem('topstories', ids);
-        createList(ids, cb);
-    });
-}
-
-function getList(force, cb) {
-    if (force) {
-        return getFromAPI(cb);
-    }
-
-    getFromCache(function (err, list) {
-        if (!err) {
-            return cb(err, list);
-        }
-        getFromAPI(cb);
     });
 }
 
