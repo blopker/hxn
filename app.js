@@ -9,6 +9,8 @@ let nunjucks = require('nunjucks');
 
 let app = express();
 
+const DEBUG = app.get('env') === 'development';
+
 nunjucks.configure('views', {
     autoescape: true,
     express: app
@@ -18,7 +20,12 @@ nunjucks.configure('views', {
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 
 app.use(logger('dev'));
-app.use(express.static(path.join(__dirname, 'public')));
+
+let staticOps = {
+    maxAge: DEBUG ? 0 : '1d'
+};
+
+app.use(express.static(path.join(__dirname, 'public'), staticOps));
 
 app.get('/', function (req, res) {
     fb.getList(function (_, stories) {
@@ -26,7 +33,7 @@ app.get('/', function (req, res) {
     });
 });
 
-app.get('/comments/:id', function (req, res) {
+app.get('/comments/:id', function (req, res, next) {
     function render(comment) {
         comment.children = comment.kids.map(function (c) {
             return render(c);
@@ -35,6 +42,7 @@ app.get('/comments/:id', function (req, res) {
     }
 
     fb.getComment(req.params.id, function (_, comment) {
+        if (!comment.id) { next(); }
         res.render('comments.html', {comment: render(comment)});
     });
 });
@@ -50,10 +58,10 @@ app.use(function(req, res, next) {
 
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
+if (DEBUG) {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', {
+    res.render('error.html', {
       message: err.message,
       error: err
     });
@@ -62,7 +70,7 @@ if (app.get('env') === 'development') {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res) {
+app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.send(Error);
 });

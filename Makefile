@@ -1,15 +1,14 @@
-all: build
-
-prep:
-	@rm -rf dist
-	@mkdir -p dist/js
+install:
 	@npm install
 
-build: prep
-	@npm run build
+start: install
+	@npm start
 
-watch: prep
+watch: install
 	@npm run watch
 
-deploy: build
-	@rsync -ahvc ./index.html ./css ./dist static@kbl.io:public/dev/hxn
+deploy:
+	@git push dokku master
+
+clean:
+	@rm -rf node_modules
