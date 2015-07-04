@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 'use strict';
 
 let express = require('express');
@@ -34,16 +35,10 @@ app.get('/', function (req, res) {
 });
 
 app.get('/comments/:id', function (req, res, next) {
-    function render(comment) {
-        comment.children = comment.kids.map(function (c) {
-            return render(c);
-        });
-        return nunjucks.render('comment.html', comment);
-    }
-
     fb.getComment(req.params.id, function (_, comment) {
         if (!comment.id) { next(); }
-        res.render('comments.html', {comment: render(comment)});
+        console.log(comment)
+        res.render('comments.html', {comment: comment});
     });
 });
 

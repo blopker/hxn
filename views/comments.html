@@ -1,4 +1,24 @@
 {% extends "base.html" %}
+
+{% macro commentSnip(comment) %}
+  <div class="comment">
+      <div class="author">{{ comment.by }}</div>
+    <div class="text">{{ comment.text | safe }}</div>
+      <div class="children">
+          {% for child in comment.kids %}
+              {{ commentSnip(child) }}
+          {% endfor %}
+      </div>
+  </div>
+{% endmacro %}
+
 {% block content %}
-    {{ comment | safe }}
+<h3>{{ comment.title }}</h3>
+<a href="{{comment.url}}">{{ comment.url }}</a>
+<div class="author">By: {{ comment.by }}</div>
+<div class="text">{{ comment.text | safe }}</div>
+<hr>
+{% for child in comment.kids %}
+    {{ commentSnip(child) }}
+{% endfor %}
 {% endblock %}

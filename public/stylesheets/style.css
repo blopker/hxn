@@ -49,6 +49,10 @@ h3 {
     border-left: 1px solid gray;
 }
 
+.author {
+  color: gray;
+}
+
 aside {
 	border-left: 1px solid rgb(195, 195, 195);
 	height: 100%;
