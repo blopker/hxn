@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 'use strict';
 
-let express = require('express');
-let path = require('path');
-// let favicon = require('serve-favicon');
-let logger = require('morgan');
-let fb = require('./firebase');
-let nunjucks = require('nunjucks');
+var express = require('express');
+var path = require('path');
+// var favicon = require('serve-favicon');
+var logger = require('morgan');
+var fb = require('./firebase');
+var nunjucks = require('nunjucks');
 
-let app = express();
+var app = express();
 
 const DEBUG = app.get('env') === 'development';
 
@@ -22,7 +22,7 @@ nunjucks.configure('views', {
 
 app.use(logger('dev'));
 
-let staticOps = {
+var staticOps = {
     maxAge: DEBUG ? 0 : '1d'
 };
 
@@ -44,7 +44,7 @@ app.get('/comments/:id', function (req, res, next) {
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  let err = new Error('Not Found');
+  var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });

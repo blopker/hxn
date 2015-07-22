@@ -1,10 +1,10 @@
 'use strict';
 
-let Firebase = require('firebase');
-let async = require('async');
-let url = require('url');
+var Firebase = require('firebase');
+var async = require('async');
+var url = require('url');
 
-let fire = new Firebase('https://hacker-news.firebaseio.com/v0/');
+var fire = new Firebase('https://hacker-news.firebaseio.com/v0/');
 
 function createItem(item) {
     if (!item.url) {
@@ -16,7 +16,7 @@ function createItem(item) {
 
 function getItem(id, cb) {
     fire.child('item/' + id).once('value', function (snap) {
-        let newItem = snap.val();
+        var newItem = snap.val();
         if (!newItem) { return cb(null, {}); }
         cb(null, createItem(newItem));
     });
@@ -42,7 +42,7 @@ function createList(ids, cb) {
 
 function getList (cb) {
     fire.child('topstories').once('value', function (snap) {
-        let ids = snap.val().slice(0, 30);
+        var ids = snap.val().slice(0, 30);
         createList(ids, cb);
     });
 }
