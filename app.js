@@ -10,7 +10,7 @@ var nunjucks = require('nunjucks');
 
 var app = express();
 
-const DEBUG = app.get('env') === 'development';
+var DEBUG = app.get('env') === 'development';
 
 nunjucks.configure('views', {
     autoescape: true,
