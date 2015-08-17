@@ -37,7 +37,6 @@ app.get('/', function (req, res) {
 app.get('/comments/:id', function (req, res, next) {
     fb.getComment(req.params.id, function (_, comment) {
         if (!comment.id) { next(); }
-        console.log(comment)
         res.render('comments.html', {comment: comment});
     });
 });
