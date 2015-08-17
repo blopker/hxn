@@ -41,6 +41,7 @@ function createList(ids, cb) {
     async.map(ids, getItem, function(err2, items) {
         items = items.filter(function(item) { return item !== undefined; });
         items = items.filter(function(item) { return item !== null; });
+        items = items.filter(function(item) { return Object.keys(item).length !== 0; });
         cb(null, items.map(createItem));
     });
 }
