@@ -29,9 +29,7 @@ var staticOps = {
 app.use(express.static(path.join(__dirname, 'public'), staticOps));
 
 app.get('/', function (req, res) {
-  console.log('hi');
   fb.getList(function (_, stories) {
-    console.log('yo');
     res.render('list.html', {stories: stories});
   });
 });

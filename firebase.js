@@ -19,7 +19,6 @@ function getItem(id, cb) {
         cb(null, {});
     }, 1000);
     fire.child('item/' + id).once('value', function (snap) {
-        console.log(id);
         var newItem = snap.val();
         if (!newItem) { return cb(null, {}); }
         var item = createItem(newItem);
