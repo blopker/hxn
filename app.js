@@ -13,8 +13,8 @@ var app = express();
 var DEBUG = app.get('env') === 'development';
 
 nunjucks.configure('views', {
-    autoescape: true,
-    express: app
+  autoescape: true,
+  express: app
 });
 
 // uncomment after placing your favicon in /public
@@ -23,22 +23,24 @@ nunjucks.configure('views', {
 app.use(logger('dev'));
 
 var staticOps = {
-    maxAge: DEBUG ? 0 : '1d'
+  maxAge: DEBUG ? 0 : '1d'
 };
 
 app.use(express.static(path.join(__dirname, 'public'), staticOps));
 
 app.get('/', function (req, res) {
-    fb.getList(function (_, stories) {
-        res.render('list.html', {stories: stories});
-    });
+  console.log('hi');
+  fb.getList(function (_, stories) {
+    console.log('yo');
+    res.render('list.html', {stories: stories});
+  });
 });
 
 app.get('/comments/:id', function (req, res, next) {
-    fb.getComment(req.params.id, function (_, comment) {
-        if (!comment.id) { next(); }
-        res.render('comments.html', {comment: comment});
-    });
+  fb.getComment(req.params.id, function (_, comment) {
+    if (!comment.id) { next(); }
+    res.render('comments.html', {comment: comment});
+  });
 });
 
 // catch 404 and forward to error handler
