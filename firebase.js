@@ -15,14 +15,14 @@ function createItem(item) {
 }
 
 function getItem(id, cb) {
-    var to = setTimeout(function() {
-        cb(null, {});
-    }, 1000);
+    // var to = setTimeout(function() {
+    //     cb(null, {});
+    // }, 1000);
     fire.child('item/' + id).once('value', function (snap) {
         var newItem = snap.val();
         if (!newItem) { return cb(null, {}); }
         var item = createItem(newItem);
-        clearTimeout(to);
+        // clearTimeout(to);
         cb(null, item);
     });
 }
