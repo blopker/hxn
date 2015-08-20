@@ -3,6 +3,7 @@
 var Firebase = require('firebase');
 var async = require('async');
 var url = require('url');
+var _ = require('lodash');
 
 var fire = new Firebase('https://hacker-news.firebaseio.com/v0/');
 
@@ -15,14 +16,14 @@ function createItem(item) {
 }
 
 function getItem(id, cb) {
-    // var to = setTimeout(function() {
-    //     cb(null, {});
-    // }, 1000);
+    cb = _.once(cb);
+    setTimeout(function() {
+        cb(null, {});
+    }, 2000);
     fire.child('item/' + id).once('value', function (snap) {
         var newItem = snap.val();
         if (!newItem) { return cb(null, {}); }
         var item = createItem(newItem);
-        // clearTimeout(to);
         cb(null, item);
     });
 }
