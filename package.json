@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "forever start app.js",
+    "start": "forever app.js",
     "watch": "nodemon app.js"
   },
   "engines": {
