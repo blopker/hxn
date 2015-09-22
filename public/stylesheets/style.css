@@ -44,6 +44,10 @@ h3 {
 	color: rgb(118, 118, 118);
 }
 
+.comment-header {
+	padding: 10px;
+}
+
 .comment {
     padding: 10px;
     border-left: 1px solid gray;

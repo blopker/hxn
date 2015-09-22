@@ -17,6 +17,7 @@
     "forever": "^0.15.1",
     "lodash": "^3.10.1",
     "morgan": "~1.6.1",
+    "newrelic": "*",
     "nunjucks": "^2.0.0",
     "serve-favicon": "~2.3.0"
   },

@@ -13,10 +13,12 @@
 {% endmacro %}
 
 {% block content %}
-<h3>{{ comment.title }}</h3>
-<a href="{{comment.url}}">{{ comment.url }}</a>
-<div class="author">By: {{ comment.by }}</div>
-<div class="text">{{ comment.text | safe }}</div>
+<div class="comment-header">
+  <h3>{{ comment.title }}</h3>
+  <a href="{{comment.url}}">{{ comment.url }}</a>
+  <div class="author">By: {{ comment.by }}</div>
+  <div class="text">{{ comment.text | safe }}</div>
+</div>
 <hr>
 {% for child in comment.kids %}
     {{ commentSnip(child) }}
