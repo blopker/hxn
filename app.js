@@ -31,6 +31,12 @@ var staticOps = {
 
 app.use(express.static(path.join(__dirname, 'public'), staticOps));
 
+// New Relic middleware
+app.use(function(req, res, next) {
+  res.locals.timingHeader = newrelic.getBrowserTimingHeader();
+  next();
+});
+
 app.get('/', function (req, res) {
   fb.getList(function (_, stories) {
     res.render('list.html', {stories: stories});
