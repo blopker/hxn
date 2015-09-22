@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 'use strict';
 
-require('newrelic');
+var newrelic = require('newrelic');
 var express = require('express');
 var path = require('path');
 // var favicon = require('serve-favicon');
@@ -17,6 +17,8 @@ nunjucks.configure('views', {
   autoescape: true,
   express: app
 });
+
+app.locals.newrelic = newrelic;
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
