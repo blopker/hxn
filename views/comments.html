@@ -19,7 +19,6 @@
   <div class="author">By: {{ comment.by }}</div>
   <div class="text">{{ comment.text | safe }}</div>
 </div>
-<hr>
 {% for child in comment.kids %}
     {{ commentSnip(child) }}
 {% endfor %}
