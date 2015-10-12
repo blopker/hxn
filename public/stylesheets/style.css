@@ -50,6 +50,7 @@ h3 {
 .list-item a {
   text-decoration: none;
   color: #333;
+  outline : none;
 }
 
 .list-item a:visited {
