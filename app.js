@@ -4,7 +4,7 @@
 var newrelic = require('newrelic');
 var express = require('express');
 var path = require('path');
-// var favicon = require('serve-favicon');
+var favicon = require('serve-favicon');
 var logger = require('morgan');
 var fb = require('./firebase');
 var nunjucks = require('nunjucks');
@@ -21,7 +21,7 @@ nunjucks.configure('views', {
 app.locals.newrelic = newrelic;
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(__dirname + '/public/favicon.ico'));
+app.use(favicon(path.join(__dirname, '/public/favicon.ico')));
 
 app.use(logger('dev'));
 
