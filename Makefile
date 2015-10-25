@@ -4,7 +4,7 @@ install:
 start: install
 	@npm start
 
-watch: install
+watch:
 	@npm run watch
 
 deploy:

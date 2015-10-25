@@ -1,6 +1,4 @@
 #!/usr/bin/env node
-'use strict';
-
 var newrelic = require('newrelic');
 var express = require('express');
 var path = require('path');
