@@ -32,7 +32,7 @@ app.use(compression());
 app.use(logger('dev'));
 
 let staticOps = {
-  maxAge: DEBUG ? 0 : '31536000'
+  maxAge: DEBUG ? 0 : '200d'
 };
 
 app.use(STATIC_BASE,
