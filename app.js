@@ -1,37 +1,50 @@
 #!/usr/bin/env node
-var newrelic = require('newrelic');
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var fb = require('./firebase');
-var nunjucks = require('nunjucks');
+'use strict';
 
-var app = express();
+let compression = require('compression');
+let crypto = require('crypto');
+let express = require('express');
+let favicon = require('serve-favicon');
+let fb = require('./firebase');
+let logger = require('morgan');
+let newrelic = require('newrelic');
+let nunjucks = require('nunjucks');
+let path = require('path');
 
-var DEBUG = app.get('env') === 'development';
+function randomValueBase64 (len) {
+    return crypto.randomBytes(Math.ceil(len * 3 / 4))
+        .toString('base64')
+        .slice(0, len)
+        .replace(/\+/g, '0')
+        .replace(/\//g, '0');
+}
+
+let app = express();
+
+let DEBUG = app.get('env') === 'development';
+let STATIC_BASE = `/static-${randomValueBase64(10)}`;
 
 nunjucks.configure('views', {
   autoescape: true,
   express: app
 });
 
-app.locals.newrelic = newrelic;
-
-// uncomment after placing your favicon in /public
-app.use(favicon(path.join(__dirname, '/public/favicon.ico')));
-
+app.use(compression());
 app.use(logger('dev'));
 
-var staticOps = {
-  maxAge: DEBUG ? 0 : '1d'
+let staticOps = {
+  maxAge: DEBUG ? 0 : '31536000'
 };
 
-app.use(express.static(path.join(__dirname, 'public'), staticOps));
+app.use(STATIC_BASE,
+  express.static(path.join(__dirname, 'public'), staticOps));
+app.use(favicon(path.join(__dirname, '/public/favicon.ico')));
 
 // New Relic middleware
+app.locals.newrelic = newrelic;
 app.use(function(req, res, next) {
   res.locals.timingHeader = newrelic.getBrowserTimingHeader();
+  res.locals.STATIC_BASE = STATIC_BASE;
   next();
 });
 
@@ -50,7 +63,7 @@ app.get('/comments/:id', function (req, res, next) {
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+  let err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
@@ -76,8 +89,8 @@ app.use(function(err, req, res, next) {
   res.send(Error);
 });
 
-var server = app.listen(process.env.PORT || '3000', function () {
-  var host = server.address().address;
-  var port = server.address().port;
+let server = app.listen(process.env.PORT || '3000', function () {
+  let host = server.address().address;
+  let port = server.address().port;
   console.log('Listening at http://%s:%s', host, port);
 });

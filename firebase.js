@@ -1,3 +1,5 @@
+'use strict';
+
 var Firebase = require('firebase');
 var async = require('async');
 var url = require('url');
