@@ -4,7 +4,6 @@
 let compression = require('compression');
 let crypto = require('crypto');
 let express = require('express');
-let favicon = require('serve-favicon');
 let fb = require('./firebase');
 let logger = require('morgan');
 let newrelic = require('newrelic');
@@ -38,7 +37,6 @@ let staticOps = {
 
 app.use(STATIC_BASE,
   express.static(path.join(__dirname, 'public'), staticOps));
-app.use(favicon(path.join(__dirname, '/public/favicon.ico')));
 
 // New Relic middleware
 app.locals.newrelic = newrelic;
