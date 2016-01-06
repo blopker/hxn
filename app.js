@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 'use strict';
 
+let newrelic = require('newrelic');
 let compression = require('compression');
 let crypto = require('crypto');
 let express = require('express');
 let fb = require('./firebase');
 let logger = require('morgan');
-let newrelic = require('newrelic');
 let nunjucks = require('nunjucks');
 let path = require('path');
 
