@@ -2,7 +2,6 @@
 'use strict';
 
 let newrelic = require('newrelic');
-let compression = require('compression');
 let crypto = require('crypto');
 let express = require('express');
 let fb = require('./firebase');
@@ -28,7 +27,6 @@ nunjucks.configure('views', {
   express: app
 });
 
-app.use(compression());
 app.use(logger('dev'));
 
 let staticOps = {
