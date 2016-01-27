@@ -1,11 +1,11 @@
 'use strict';
 
-var Firebase = require('firebase');
-var async = require('async');
-var url = require('url');
-var _ = require('lodash');
+let Firebase = require('firebase');
+let url = require('url');
+let _ = require('lodash');
+let thunk = require('thunkify');
 
-var fire = new Firebase('https://hacker-news.firebaseio.com/v0/');
+let fire = new Firebase('https://hacker-news.firebaseio.com/v0/');
 
 function createItem(item) {
     if (!item.url) {
@@ -21,36 +21,36 @@ function getItem(id, cb) {
         cb(null, {});
     }, 2000);
     fire.child('item/' + id).once('value', function (snap) {
-        var newItem = snap.val();
+        let newItem = snap.val();
         if (!newItem) { return cb(null, {}); }
-        var item = createItem(newItem);
+        let item = createItem(newItem);
         cb(null, item);
     });
 }
+getItem = thunk(getItem);
 
-function getComment(commentID, cb) {
-    getItem(commentID, function (err1, comment) {
-        comment.kids = comment.kids || [];
-        async.map(comment.kids, getComment, function (err2, comments) {
-            comment.kids = comments;
-            cb(null, comment);
-        });
-    });
+function * getComment(commentID) {
+    let comment = yield getItem(commentID);
+    comment.kids = comment.kids || [];
+    comment.kids = yield comment.kids.map(getComment);
+    return comment
 }
 
-function createList(ids, cb) {
-    async.map(ids, getItem, function(err2, items) {
-        items = items.filter(i => !_.isEmpty(i))
-          .map(createItem);
-        cb(null, items);
-    });
+function * createList(ids) {
+    let items = yield ids.map(id => getItem(id));
+    return items.filter(i => !_.isEmpty(i)).map(createItem);
 }
 
-function getList (cb) {
+function getStories (cb) {
     fire.child('topstories').once('value', function (snap) {
-        var ids = snap.val().slice(0, 30);
-        createList(ids, cb);
-    });
+        let ids = snap.val().slice(0, 30);
+        cb(null, ids);
+    }, function(err) { cb(err); });
+}
+
+function * getList (cb) {
+    let storyIDs = yield getStories;
+    return yield createList(storyIDs);
 }
 
 module.exports = {
