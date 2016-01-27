@@ -1,4 +1,5 @@
 install:
+	@npm set progress=false
 	@npm install
 
 start: install
