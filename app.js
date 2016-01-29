@@ -3,16 +3,11 @@
 
 let newrelic = require('newrelic');
 let crypto = require('crypto');
-let koa = require('koa');
-let logger = require('koa-logger');
-let serve = require('koa-static');
-let mount = require('koa-mount');
-let route = require('koa-route');
-let nunjucks = require('koa-nunjucks-2')
-let thunk = require('thunkify');
-let path = require('path');
-
+let express = require('express');
 let fb = require('./firebase');
+let logger = require('morgan');
+let nunjucks = require('nunjucks');
+let path = require('path');
 
 function randomValueBase64 (len) {
     return crypto.randomBytes(Math.ceil(len * 3 / 4))
@@ -22,68 +17,76 @@ function randomValueBase64 (len) {
         .replace(/\//g, '0');
 }
 
-let app = koa();
-let DEBUG = app.env === 'development';
-app.use(logger());
+let app = express();
 
-app.context.render = nunjucks({
-  ext: 'html',
-  path: path.join(__dirname, 'views'),
-  nunjucksConfig: {
-    autoescape: true
-  }
+let DEBUG = app.get('env') === 'development';
+let STATIC_BASE = `/static-${randomValueBase64(10)}`;
+
+nunjucks.configure('views', {
+  autoescape: true,
+  express: app
 });
 
-let STATIC_BASE = `/static-${randomValueBase64(10)}`;
-let staticOps = {
-  maxage: DEBUG ? 0 : '360d'
-};
-app.use(mount(STATIC_BASE, serve('public', staticOps)));
+app.use(logger('dev'));
 
-// Handle errors
-app.use(function *(next){
-  try {
-    yield next;
-  } catch (err) {
-    this.status = err.status || 500;
-    yield this.render('error', {
-      message: err.message,
-      error: err
-    });
-  }
+let staticOps = {
+  maxAge: DEBUG ? 0 : '360d'
+};
+
+app.use(STATIC_BASE,
+  express.static(path.join(__dirname, 'public'), staticOps));
+
+// New Relic middleware
+app.locals.newrelic = newrelic;
+app.use(function(req, res, next) {
+  res.locals.timingHeader = newrelic.getBrowserTimingHeader();
+  res.locals.STATIC_BASE = STATIC_BASE;
+  next();
+});
+
+app.get('/', function (req, res) {
+  fb.getList(function (_, stories) {
+    res.render('list.html', {stories: stories});
+  });
+});
+
+app.get('/comments/:id', function (req, res, next) {
+  fb.getComment(req.params.id, function (_, comment) {
+    if (!comment.id) { next(); }
+    res.render('comments.html', {comment: comment});
+  });
 });
 
 // catch 404 and forward to error handler
-app.use(function *(next) {
-  yield next
-  if (404 != this.status) { return; }
+app.use(function(req, res, next) {
   let err = new Error('Not Found');
-  err.status = this.status;
-  throw err;
+  err.status = 404;
+  next(err);
 });
 
-// New Relic middleware
-app.context.newrelic = newrelic;
-app.use(function *(next) {
-  this.state.timingHeader = newrelic.getBrowserTimingHeader();
-  this.state.STATIC_BASE = STATIC_BASE;
-  yield next;
+// error handlers
+
+// development error handler
+// will print stacktrace
+if (DEBUG) {
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error.html', {
+      message: err.message,
+      error: err
+    });
+  });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.send(Error);
 });
 
-app.use(route.get('/', function *() {
-  let stories = yield fb.getList;
-  yield this.render('list', {stories: stories});
-}));
-
-app.use(route.get('/comments/:id', function *(id, next) {
-  let t = thunk(fb.getComment);
-  let comment = yield t(id);
-
-  if (comment.id) {
-    yield this.render('comments', {comment: comment});
-  }
-}));
-
-let port = process.env.PORT || '3000'
-let server = app.listen(port);
-console.log('Listening at %s', port);
+let server = app.listen(process.env.PORT || '3000', function () {
+  let host = server.address().address;
+  let port = server.address().port;
+  console.log('Listening at http://%s:%s', host, port);
+});
