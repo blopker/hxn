@@ -5,7 +5,7 @@ let newrelic = require('newrelic');
 let crypto = require('crypto');
 let koa = require('koa');
 let logger = require('koa-logger');
-let serve = require('koa-static-cache');
+let serve = require('koa-static');
 let mount = require('koa-mount');
 let route = require('koa-route');
 let nunjucks = require('koa-nunjucks-2')
@@ -36,9 +36,7 @@ app.context.render = nunjucks({
 
 let STATIC_BASE = `/static-${randomValueBase64(10)}`;
 let staticOps = {
-  maxAge: DEBUG ? 0 : 31557600,
-  dynamic: DEBUG,
-  buffer: !DEBUG
+  maxage: DEBUG ? 0 : '360d'
 };
 app.use(mount(STATIC_BASE, serve('public', staticOps)));
 
