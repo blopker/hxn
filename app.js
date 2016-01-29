@@ -9,6 +9,7 @@ let serve = require('koa-static-cache');
 let mount = require('koa-mount');
 let route = require('koa-route');
 let nunjucks = require('koa-nunjucks-2')
+let thunk = require('thunkify');
 let path = require('path');
 
 let fb = require('./firebase');
@@ -77,7 +78,9 @@ app.use(route.get('/', function *() {
 }));
 
 app.use(route.get('/comments/:id', function *(id, next) {
-  let comment = yield fb.getComment(id);
+  let t = thunk(fb.getComment);
+  let comment = yield t(id);
+
   if (comment.id) {
     yield this.render('comments', {comment: comment});
   }
