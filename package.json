@@ -10,13 +10,13 @@
     "node": "5.4.1"
   },
   "dependencies": {
-    "async": "^1.2.1",
-    "debug": "~2.2.0",
-    "express": "~4.13.3",
+    "async": "^1.5.2",
+    "debug": "^2.2.0",
+    "express": "^4.13.3",
     "firebase": "^2.2.7",
     "forever": "^0.15.1",
-    "lodash": "^3.10.1",
-    "morgan": "~1.6.1",
+    "lodash": "^4.8.2",
+    "morgan": "^1.7.0",
     "newrelic": "*",
     "nunjucks": "^2.0.0"
 },
