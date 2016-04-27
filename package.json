@@ -7,7 +7,7 @@
     "watch": "nodemon app.js"
   },
   "engines": {
-    "node": "5.10.0"
+    "node": "^6.0.0"
   },
   "dependencies": {
     "async": "^1.5.2",
@@ -15,10 +15,10 @@
     "express": "^4.13.3",
     "firebase": "^2.2.7",
     "forever": "^0.15.1",
-    "lodash": "^4.8.2",
+    "lodash": "^4.11.1",
     "morgan": "^1.7.0",
     "newrelic": "*",
-    "nunjucks": "^2.0.0"
+    "nunjucks": "^2.4.2"
 },
   "devDependencies": {
     "eslint": "*",
