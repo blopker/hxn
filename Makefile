@@ -14,4 +14,4 @@ clean:
 	@rm -rf node_modules
 
 git:
-	@git remote add dokku dokku@kbl.io:hxn
+	@git remote add dokku dokku@blopker.com:hxn
