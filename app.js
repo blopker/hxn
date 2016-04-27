@@ -45,13 +45,13 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-  fb.getList((_, stories) => {
+  fb.getList().then( stories => {
     res.render('list.html', {stories: stories});
   });
 });
 
 app.get('/comments/:id', (req, res, next) => {
-  fb.getComment(req.params.id, (_, comment) => {
+  fb.getComment(req.params.id).then(comment => {
     if (!comment.id) { next(); }
     res.render('comments.html', {comment: comment});
   });

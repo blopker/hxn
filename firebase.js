@@ -1,13 +1,13 @@
 'use strict';
 
 let Firebase = require('firebase');
-let async = require('async');
 let url = require('url');
 let _ = require('lodash');
 
 let fire = new Firebase('https://hacker-news.firebaseio.com/v0/');
 
 function createItem(item) {
+    if (!item) { return {}; }
     if (!item.url) {
         item.url = `https://news.ycombinator.com/item?id=${item.id}`;
     }
@@ -15,41 +15,39 @@ function createItem(item) {
     return item;
 }
 
-function getItem(id, cb) {
-    cb = _.once(cb);
-    setTimeout(() => {
-        cb(null, {});
-    }, 2000);
-    fire.child(`item/${id}`).once('value', snap => {
-        let newItem = snap.val();
-        if (!newItem) { return cb(null, {}); }
-        let item = createItem(newItem);
-        cb(null, item);
-    });
-}
-
-function getComment(commentID, cb) {
-    getItem(commentID, (err1, comment) => {
-        comment.kids = comment.kids || [];
-        async.map(comment.kids, getComment, (err2, comments) => {
-            comment.kids = comments;
-            cb(null, comment);
+function getItem(id) {
+    return new Promise(res => {
+        setTimeout(() => {
+            res({});
+        }, 2000);
+        fire.child(`item/${id}`).once('value', snap => {
+            let newItem = snap.val();
+            res(createItem(newItem));
         });
     });
 }
 
-function createList(ids, cb) {
-    async.map(ids, getItem, (err2, items) => {
-        items = items.filter(i => !_.isEmpty(i))
-          .map(createItem);
-        cb(null, items);
+function getComment(commentID) {
+    return getItem(commentID).then(comment => {
+        let kids = comment.kids || [];
+        return Promise.all(kids.map(getComment)).then(k => {
+            comment.kids = k;
+            return comment;
+        });
     });
 }
 
-function getList (cb) {
-    fire.child('topstories').once('value', snap => {
-        let ids = snap.val().slice(0, 30);
-        createList(ids, cb);
+function getList () {
+    let p = new Promise(res => {
+        fire.child('topstories').once('value', snap => {
+            res(snap.val().slice(0, 30));
+        });
+    });
+
+    return p.then(ids => {
+        return Promise.all(ids.map(getItem));
+    }).then(items => {
+        return items.filter(i => !_.isEmpty(i));
     });
 }
 
