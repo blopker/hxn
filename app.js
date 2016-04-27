@@ -38,27 +38,27 @@ app.use(STATIC_BASE,
 
 // New Relic middleware
 app.locals.newrelic = newrelic;
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   res.locals.timingHeader = newrelic.getBrowserTimingHeader();
   res.locals.STATIC_BASE = STATIC_BASE;
   next();
 });
 
-app.get('/', function (req, res) {
-  fb.getList(function (_, stories) {
+app.get('/', (req, res) => {
+  fb.getList((_, stories) => {
     res.render('list.html', {stories: stories});
   });
 });
 
-app.get('/comments/:id', function (req, res, next) {
-  fb.getComment(req.params.id, function (_, comment) {
+app.get('/comments/:id', (req, res, next) => {
+  fb.getComment(req.params.id, (_, comment) => {
     if (!comment.id) { next(); }
     res.render('comments.html', {comment: comment});
   });
 });
 
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   let err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -69,7 +69,7 @@ app.use(function(req, res, next) {
 // development error handler
 // will print stacktrace
 if (DEBUG) {
-  app.use(function(err, req, res) {
+  app.use((err, req, res) => {
     res.status(err.status || 500);
     res.render('error.html', {
       message: err.message,
@@ -80,12 +80,12 @@ if (DEBUG) {
 
 // production error handler
 // no stacktraces leaked to user
-app.use(function(err, req, res) {
+app.use((err, req, res) => {
   res.status(err.status || 500);
   res.send(Error);
 });
 
-let server = app.listen(process.env.PORT || '3000', function () {
+let server = app.listen(process.env.PORT || '3000', () => {
   let host = server.address().address;
   let port = server.address().port;
   console.log('Listening at http://%s:%s', host, port);
