@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% macro commentSnip(comment) %}
-  <div class="comment">
+  <div class="js-comment comment">
       <div class="author">{{ comment.by }}</div>
     <div class="text">{{ comment.text | safe }}</div>
       <div class="children">
