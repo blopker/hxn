@@ -10,6 +10,9 @@ watch:
 deploy:
 	@git push dokku master
 
+test:
+	@npm test
+
 clean:
 	@rm -rf node_modules
 

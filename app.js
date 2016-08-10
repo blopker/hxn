@@ -88,5 +88,6 @@ app.use((err, req, res) => {
 let server = app.listen(process.env.PORT || '3000', () => {
   let host = server.address().address;
   let port = server.address().port;
+  // eslint-disable-next-line no-console 
   console.log('Listening at http://%s:%s', host, port);
 });
