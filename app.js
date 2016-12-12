@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 'use strict';
 
-let newrelic = require('newrelic');
 let crypto = require('crypto');
 let express = require('express');
 let fb = require('./firebase');
@@ -36,10 +35,7 @@ let staticOps = {
 app.use(STATIC_BASE,
   express.static(path.join(__dirname, 'public'), staticOps));
 
-// New Relic middleware
-app.locals.newrelic = newrelic;
 app.use((req, res, next) => {
-  res.locals.timingHeader = newrelic.getBrowserTimingHeader();
   res.locals.STATIC_BASE = STATIC_BASE;
   next();
 });

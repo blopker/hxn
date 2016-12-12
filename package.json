@@ -16,7 +16,6 @@
     "lodash": "^4.17.1",
     "lru-cache": "^4.0.2",
     "morgan": "^1.7.0",
-    "newrelic": "*",
     "nunjucks": "^3.0.0"
   },
   "devDependencies": {
