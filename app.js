@@ -45,16 +45,14 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-  fb.getList().then( stories => {
-    res.render('list.html', {stories: stories});
-  });
+  const stories = fb.getStories();
+  res.render('list.html', {stories: stories});
 });
 
 app.get('/comments/:id', (req, res, next) => {
-  fb.getComment(req.params.id).then(comment => {
-    if (!comment.id) { next(); }
-    res.render('comments.html', {comment: comment});
-  });
+  const comment = fb.getComment(req.params.id)
+  if (!comment.id) { next(); }
+  res.render('comments.html', {comment: comment});
 });
 
 // catch 404 and forward to error handler
@@ -88,8 +86,8 @@ app.use((err, req, res) => {
 let server = app.listen(process.env.PORT || '3000', () => {
   let host = server.address().address;
   let port = server.address().port;
-  // eslint-disable-next-line no-console 
+  // eslint-disable-next-line no-console
   console.log('Listening at http://%s:%s', host, port);
 });
 
-
+fb.init();

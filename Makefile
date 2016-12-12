@@ -1,10 +1,7 @@
 install:
 	@npm install
 
-start: install
-	@npm start
-
-watch:
+start:
 	@npm run watch
 
 deploy:

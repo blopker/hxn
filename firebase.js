@@ -1,10 +1,16 @@
 'use strict';
 
-let Firebase = require('firebase');
-let url = require('url');
-let _ = require('lodash');
+const firebase = require('firebase');
+const url = require('url');
+const _ = require('lodash');
+const comments = require('lru-cache')(5000);
+let stories = [];
 
-let fire = new Firebase('https://hacker-news.firebaseio.com/v0/');
+const config = {
+  databaseURL: 'https://hacker-news.firebaseio.com'
+};
+firebase.initializeApp(config);
+const fire = firebase.database().ref('/v0/');
 
 function createItem(item) {
     if (!item) { return {}; }
@@ -19,39 +25,41 @@ function getItem(id) {
     return new Promise(res => {
         setTimeout(() => {
             res({});
-        }, 2000);
+        }, 10000);
         fire.child(`item/${id}`).once('value', snap => {
-            let newItem = snap.val();
+            const newItem = snap.val();
             res(createItem(newItem));
         });
     });
 }
 
-function getComment(commentID) {
+function updateComment(commentID) {
     return getItem(commentID).then(comment => {
-        let kids = comment.kids || [];
-        return Promise.all(kids.map(getComment)).then(k => {
+        const kids = comment.kids || [];
+        return Promise.all(kids.map(updateComment)).then(k => {
             comment.kids = k;
             return comment;
         });
     });
 }
 
-function getList () {
-    let p = new Promise(res => {
-        fire.child('topstories').once('value', snap => {
-            res(snap.val().slice(0, 30));
+function init() {
+    fire.child('topstories').limitToFirst(30).on('value', snap => {
+        Promise.all(snap.val().map(getItem)).then(items => {
+           return items.filter(i => !_.isEmpty(i));
+        }).then(items => {
+            stories = items;
+            return Promise.all(items.map(i => i.id).map(updateComment));
+        }).then(items => {
+            items.map(i => {
+                comments.set(String(i.id), i);
+            });
         });
-    });
-
-    return p.then(ids => {
-        return Promise.all(ids.map(getItem));
-    }).then(items => {
-        return items.filter(i => !_.isEmpty(i));
     });
 }
 
 module.exports = {
-    getList: getList,
-    getComment: getComment
+    init,
+    getStories: () => stories,
+    getComment: id => comments.get(id)
 };
