@@ -1,5 +1,11 @@
 {
   "name": "hxn",
+  "main": "app.js",
+  "repository": {
+    "url": "git@github.com:blopker/hxn.git",
+    "type": "git"
+  },
+  "license": "MIT",
   "version": "0.0.0",
   "private": true,
   "scripts": {
