@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% block title %}{{ comment.title }}{% endblock %}
+
 {% macro commentSnip(comment) %}
   <div class="js-comment comment">
       <div class="js-author author">{{ comment.by }}</div>
