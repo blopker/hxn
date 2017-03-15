@@ -23,6 +23,10 @@ a {
   color: #333;
 }
 
+p:last-of-type {
+  margin-bottom: 0;
+}
+
 #container, .header-title {
   margin: 0 auto;
   max-width: 800px;
@@ -89,8 +93,8 @@ pre {
 }
 
 .comment {
-  padding: 10px;
-  padding-top: 0;
+  padding-left: 10px;
+  margin-bottom: 10px;
   border-left: 1px solid gray;
 }
 
@@ -99,6 +103,10 @@ pre {
   height: 60px;
   border-bottom: 1px solid rgb(195, 195, 195);
   color: #969696;
+}
+
+.comment .text {
+  padding-bottom: 10px;
 }
 
 .children {
