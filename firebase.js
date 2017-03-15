@@ -35,9 +35,10 @@ function getItem(id) {
 
 function updateComment(commentID) {
     return getItem(commentID).then(comment => {
-        const kids = comment.kids || [];
-        return Promise.all(kids.map(updateComment)).then(k => {
-            comment.kids = k;
+        const kidIDs = comment.kids || [];
+        const futureKids = kidIDs.map(updateComment);
+        return Promise.all(futureKids).then(k => {
+            comment.kids = k.filter(k => k.text);
             return comment;
         });
     });

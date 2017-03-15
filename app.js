@@ -1,25 +1,25 @@
 #!/usr/bin/env node
 'use strict';
 
-let crypto = require('crypto');
-let express = require('express');
-let fb = require('./firebase');
-let logger = require('morgan');
-let nunjucks = require('nunjucks');
-let path = require('path');
+const crypto = require('crypto');
+const express = require('express');
+const fb = require('./firebase');
+const logger = require('morgan');
+const nunjucks = require('nunjucks');
+const path = require('path');
 
+const app = express();
+
+const DEBUG = app.get('env') === 'development';
 function randomValueBase64 (len) {
-    return crypto.randomBytes(Math.ceil(len * 3 / 4))
-        .toString('base64')
-        .slice(0, len)
-        .replace(/\+/g, '0')
-        .replace(/\//g, '0');
+  if (DEBUG) { return 'RANDOM'; }
+  return crypto.randomBytes(Math.ceil(len * 3 / 4))
+    .toString('base64')
+    .slice(0, len)
+    .replace(/\+/g, '0')
+    .replace(/\//g, '0');
 }
-
-let app = express();
-
-let DEBUG = app.get('env') === 'development';
-let STATIC_BASE = `/static-${randomValueBase64(10)}`;
+const STATIC_BASE = `/static-${randomValueBase64(10)}`;
 
 nunjucks.configure('views', {
   autoescape: true,
@@ -28,7 +28,7 @@ nunjucks.configure('views', {
 
 app.use(logger('dev'));
 
-let staticOps = {
+const staticOps = {
   maxAge: DEBUG ? 0 : '360d'
 };
 
@@ -53,7 +53,7 @@ app.get('/comments/:id', (req, res, next) => {
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  let err = new Error('Not Found');
+  const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
@@ -79,9 +79,9 @@ app.use((err, req, res) => {
   res.send(Error);
 });
 
-let server = app.listen(process.env.PORT || '3000', () => {
-  let host = server.address().address;
-  let port = server.address().port;
+const server = app.listen(process.env.PORT || '3000', () => {
+  const host = server.address().address;
+  const port = server.address().port;
   // eslint-disable-next-line no-console
   console.log('Listening at http://%s:%s', host, port);
 });

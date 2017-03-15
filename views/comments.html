@@ -2,13 +2,15 @@
 
 {% macro commentSnip(comment) %}
   <div class="js-comment comment">
-      <div class="author">{{ comment.by }}</div>
+      <div class="js-author author">{{ comment.by }}</div>
     <div class="text">{{ comment.text | safe }}</div>
+    {% if comment.kids.length > 0 %}
       <div class="children">
           {% for child in comment.kids %}
               {{ commentSnip(child) }}
           {% endfor %}
       </div>
+    {% endif %}
   </div>
 {% endmacro %}
 
@@ -16,7 +18,7 @@
 <div class="comment-header">
   <h3>{{ comment.title }}</h3>
   <a href="{{comment.url}}">{{ comment.url }}</a>
-  <div class="author">By: {{ comment.by }}</div>
+  <div class="comment-header-author">By: {{ comment.by }}</div>
   <div class="text">{{ comment.text | safe }}</div>
 </div>
 {% for child in comment.kids %}
