@@ -1,6 +1,8 @@
 HXN
 ===
 
+https://hxn.kbl.io
+
 Mobile Hacker News reader. Designed with an eye on performance. Run it on Dokku or Heroku or Whateverku.
 
 Develop

@@ -95,10 +95,15 @@ pre {
 .comments {
   padding-right: 10px;
 }
+
 .comment {
   padding-left: 10px;
   margin-bottom: 10px;
   border-left: 1px solid gray;
+}
+
+.comments > .comment {
+  border-left: none;
 }
 
 .comment.collapse {
