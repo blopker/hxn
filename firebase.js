@@ -17,7 +17,12 @@ function createItem(item) {
     if (!item.url) {
         item.url = `https://news.ycombinator.com/item?id=${item.id}`;
     }
-    item.host = url.parse(item.url).host;
+    const parsedURL = url.parse(item.url);
+    if (parsedURL.host === 'github.com') {
+        item.displayURL = parsedURL.host + parsedURL.pathname;
+    } else {
+        item.displayURL = parsedURL.host;
+    }
     return item;
 }
 
@@ -33,12 +38,29 @@ function getItem(id) {
     });
 }
 
+function closeTag(tag, text) {
+    if(text.includes(`<${tag}>`) && !text.includes(`</${tag}>`)){
+        text = text + `</${tag}>`;
+    }
+    return text;
+}
+
+function cleanComment(comment) {
+    if (comment.text) {
+        comment.text = closeTag('i', comment.text);
+        comment.text = closeTag('p', comment.text);
+    }
+    return comment;
+}
+
 function updateComment(commentID) {
     return getItem(commentID).then(comment => {
+        comment = cleanComment(comment);
         const kidIDs = comment.kids || [];
         const futureKids = kidIDs.map(updateComment);
         return Promise.all(futureKids).then(k => {
             comment.kids = k.filter(k => k.text);
+            comment.kids = comment.kids.map(cleanComment);
             return comment;
         });
     });
