@@ -3,12 +3,13 @@
 
 const crypto = require('crypto');
 const express = require('express');
-const fb = require('./firebase');
+const api = require('./api');
 const logger = require('morgan');
 const nunjucks = require('nunjucks');
 const path = require('path');
 
 const app = express();
+api.init();
 
 const DEBUG = app.get('env') === 'development';
 function randomValueBase64 (len) {
@@ -41,12 +42,12 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => {
-  const stories = fb.getStories();
+  const stories = api.getStories();
   res.render('list.html', {stories: stories});
 });
 
 app.get('/comments/:id', (req, res, next) => {
-  const comment = fb.getComment(req.params.id)
+  const comment = api.getComment(req.params.id)
   if (!comment.id) { next(); }
   res.render('comments.html', {comment: comment});
 });
@@ -85,5 +86,3 @@ const server = app.listen(process.env.PORT || '3000', () => {
   // eslint-disable-next-line no-console
   console.log('Listening at http://%s:%s', host, port);
 });
-
-fb.init();

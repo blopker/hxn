@@ -14,11 +14,11 @@
     "test": "eslint ."
   },
   "engines": {
-    "node": "^7.9.0"
+    "node": "^8.0.0"
   },
   "dependencies": {
     "express": "^4.13.3",
-    "firebase": "^3.9.0",
+    "firebase": "^4.1.0",
     "lodash": "^4.17.1",
     "lru-cache": "^4.0.2",
     "morgan": "^1.7.0",

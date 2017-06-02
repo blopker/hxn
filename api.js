@@ -3,13 +3,12 @@
 const firebase = require('firebase');
 const url = require('url');
 const _ = require('lodash');
-const comments = require('lru-cache')(5000);
-let stories = [];
+const commentsCache = require('lru-cache')(5000);
+let storiesCache = [];
 
-const config = {
+firebase.initializeApp({
   databaseURL: 'https://hacker-news.firebaseio.com'
-};
-firebase.initializeApp(config);
+});
 const fire = firebase.database().ref('/v0/');
 
 function createItem(item) {
@@ -32,8 +31,7 @@ function getItem(id) {
             res({});
         }, 10000);
         fire.child(`item/${id}`).once('value', snap => {
-            const newItem = snap.val();
-            res(createItem(newItem));
+            res(createItem(snap.val()));
         });
     });
 }
@@ -53,36 +51,33 @@ function cleanComment(comment) {
     return comment;
 }
 
-function updateComment(commentID) {
-    return getItem(commentID).then(comment => {
-        comment = cleanComment(comment);
-        const kidIDs = comment.kids || [];
-        const futureKids = kidIDs.map(updateComment);
-        return Promise.all(futureKids).then(k => {
-            comment.kids = k.filter(k => k.text);
-            comment.kids = comment.kids.map(cleanComment);
-            return comment;
-        });
+async function updateComment(commentID) {
+    let comment = await getItem(commentID);
+    comment = cleanComment(comment);
+    const kidIDs = comment.kids || [];
+    const futureKids = kidIDs.map(updateComment);
+    let kids = await Promise.all(futureKids);
+    comment.kids = kids.filter(k => k.text).map(cleanComment);
+    return comment;
+}
+
+async function updateStories(storyIDs) {
+    let stories = await Promise.all(storyIDs.map(getItem));
+    storiesCache = stories.filter(i => !_.isEmpty(i));
+    let comments = await Promise.all(stories.map(i => i.id).map(updateComment));
+    comments.forEach(i => {
+        commentsCache.set(String(i.id), i);
     });
 }
 
 function init() {
     fire.child('topstories').limitToFirst(30).on('value', snap => {
-        Promise.all(snap.val().map(getItem)).then(items => {
-           return items.filter(i => !_.isEmpty(i));
-        }).then(items => {
-            stories = items;
-            return Promise.all(items.map(i => i.id).map(updateComment));
-        }).then(items => {
-            items.map(i => {
-                comments.set(String(i.id), i);
-            });
-        });
+        updateStories(snap.val());
     });
 }
 
 module.exports = {
     init,
-    getStories: () => stories,
-    getComment: id => comments.get(id)
+    getStories: () => storiesCache,
+    getComment: id => commentsCache.get(id)
 };
