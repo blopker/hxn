@@ -43,13 +43,13 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => {
   const stories = api.getStories();
-  res.render('list.html', {stories: stories});
+  res.render('list.html', {stories});
 });
 
 app.get('/comments/:id', (req, res, next) => {
   const comment = api.getComment(req.params.id)
   if (!comment.id) { next(); }
-  res.render('comments.html', {comment: comment});
+  res.render('comments.html', {comment});
 });
 
 // catch 404 and forward to error handler
