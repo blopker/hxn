@@ -8,11 +8,8 @@ const express = require('express');
 const api = require('./api');
 const logger = require('morgan');
 const path = require('path');
-const ReactDOMServer = require('react-dom/server');
 
 const { baseTpl } = require('./views/base');
-const { Stories } = require('./views/list');
-const { Comments } = require('./views/comments');
 
 const app = express();
 api.init();
@@ -28,9 +25,8 @@ function randomValueBase64 (len) {
 }
 const STATIC_BASE = `/static-${randomValueBase64(10)}`;
 
-function render(El, content, title) {
-  const html = ReactDOMServer.renderToStaticMarkup(El(content));
-  return baseTpl(html, title, STATIC_BASE);
+function render(content, title) {
+  return baseTpl(content, title, STATIC_BASE);
 }
 
 app.use(logger('dev'));
@@ -49,13 +45,13 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => {
   const stories = api.getStories();
-  res.send(render(Stories, stories, 'Stories'));
+  res.send(render(stories, 'Stories'));
 });
 
 app.get('/comments/:id', (req, res, next) => {
   const comment = api.getComment(req.params.id)
-  if (!comment.id) { next(); }
-  res.send(render(Comments, comment, comment.title));
+  if (!comment) { next(); }
+  res.send(render(comment, comment.title));
 });
 
 // catch 404 and forward to error handler

@@ -4,6 +4,10 @@ const firebase = require('firebase');
 const url = require('url');
 const _ = require('lodash');
 const commentsCache = require('lru-cache')(5000);
+const { Stories } = require('./views/list');
+const { Comments } = require('./views/comments');
+const ReactDOMServer = require('react-dom/server');
+
 let storiesCache = [];
 
 firebase.initializeApp({
@@ -61,12 +65,18 @@ async function updateComment(commentID) {
     return comment;
 }
 
+function render(El, content) {
+  return ReactDOMServer.renderToStaticMarkup(El(content));
+}
+
 async function updateStories(storyIDs) {
     let stories = await Promise.all(storyIDs.map(getItem));
-    storiesCache = stories.filter(i => !_.isEmpty(i));
+    stories = stories.filter(i => !_.isEmpty(i));
+    storiesCache = render(Stories, stories);
     let comments = await Promise.all(stories.map(i => i.id).map(updateComment));
     comments.forEach(i => {
-        commentsCache.set(String(i.id), i);
+        const html = render(Comments, i)
+        commentsCache.set(String(i.id), html);
     });
 }
 
