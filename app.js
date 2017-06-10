@@ -50,7 +50,7 @@ app.get('/', (req, res) => {
 
 app.get('/comments/:id', (req, res, next) => {
   const comment = api.getComment(req.params.id)
-  if (!comment) { next(); }
+  if (!comment) { return next(); }
   res.send(render(comment, comment.title));
 });
 
