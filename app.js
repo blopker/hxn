@@ -5,8 +5,12 @@ const crypto = require('crypto');
 const express = require('express');
 const api = require('./api');
 const logger = require('morgan');
-const nunjucks = require('nunjucks');
 const path = require('path');
+const ReactDOMServer = require('react-dom/server');
+
+const { baseTpl } = require('./views/base');
+const { Stories } = require('./views/list');
+const { Comments } = require('./views/comments');
 
 const app = express();
 api.init();
@@ -22,10 +26,10 @@ function randomValueBase64 (len) {
 }
 const STATIC_BASE = `/static-${randomValueBase64(10)}`;
 
-nunjucks.configure('views', {
-  autoescape: true,
-  express: app
-});
+function render(El, content, title) {
+  const html = ReactDOMServer.renderToStaticMarkup(El(content));
+  return baseTpl(html, title, STATIC_BASE);
+}
 
 app.use(logger('dev'));
 
@@ -43,13 +47,13 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => {
   const stories = api.getStories();
-  res.render('list.html', {stories});
+  res.send(render(Stories, stories, 'Stories'));
 });
 
 app.get('/comments/:id', (req, res, next) => {
   const comment = api.getComment(req.params.id)
   if (!comment.id) { next(); }
-  res.render('comments.html', {comment});
+  res.send(render(Comments, comment, comment.title));
 });
 
 // catch 404 and forward to error handler
@@ -66,10 +70,7 @@ app.use((req, res, next) => {
 if (DEBUG) {
   app.use((err, req, res) => {
     res.status(err.status || 500);
-    res.render('error.html', {
-      message: err.message,
-      error: err
-    });
+    res.send(err.message);
   });
 }
 

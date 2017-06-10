@@ -1,12 +1,15 @@
-<!DOCTYPE html>
+'use strict';
+
+function baseTpl(content, title, static_base) {
+    return `<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>HXN - {% block title %}Stories{% endblock %}</title>
-    <link rel="icon" href="{{ STATIC_BASE }}/favicon.ico" type="image/x-icon" />
+    <title>HXN - ${title}</title>
+    <link rel="icon" href="${static_base}/favicon.ico" type="image/x-icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-    <link rel="stylesheet" href="{{ STATIC_BASE }}/css/style.css" />
+    <link rel="stylesheet" href="${static_base}/css/style.css" />
 </head>
     <body>
         <a href="/">
@@ -17,11 +20,17 @@
             </header>
         </a>
         <div id="container" class="items">
-            {% block content %}{% endblock %}
+            ${content}
         </div>
         <footer>
             Yolo'd by blopker. <a href="https://github.com/blopker/HXN">Source</a>.
         </footer>
-        <script src="{{ STATIC_BASE }}/js/main.js"></script>
+        <script src="${static_base}/js/main.js"></script>
     </body>
-</html>
+</html>`;
+}
+
+
+module.exports = {
+    baseTpl
+};

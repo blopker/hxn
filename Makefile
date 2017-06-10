@@ -1,14 +1,14 @@
 install:
-	@npm install
+	@yarn install
 
 start:
-	@npm run watch
+	@yarn run watch
 
 deploy:
 	@git push dokku master
 
 test:
-	@npm test
+	@yarn test
 
 clean:
 	@rm -rf node_modules
