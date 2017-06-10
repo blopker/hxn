@@ -6,7 +6,7 @@ function safe(text) {
 }
 
 const Child = comment => {
-    return <div className="js-comment comment">
+    return <div key={comment.id} className="js-comment comment">
         <div className="js-author author">{comment.by}</div>
         <div className="text" dangerouslySetInnerHTML={safe(comment.text)}></div>
         {Children(comment.kids)}

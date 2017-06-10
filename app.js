@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 'use strict';
 
+require('babel-register');
+
 const crypto = require('crypto');
 const express = require('express');
 const api = require('./api');

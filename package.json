@@ -9,8 +9,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "babel-node app.js",
-    "watch": "nodemon app.js -e js,html --exec babel-node",
+    "start": "node app.js",
+    "watch": "nodemon app.js -e js,html",
     "test": "eslint ."
   },
   "engines": {
