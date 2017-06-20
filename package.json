@@ -14,7 +14,7 @@
     "test": "eslint ."
   },
   "engines": {
-    "node": "^8.1.0"
+    "node": "^8.1.2"
   },
   "dependencies": {
     "babel-cli": "^6.24.1",
@@ -28,7 +28,7 @@
     "react-dom": "^15.5.4"
   },
   "devDependencies": {
-    "eslint": "^3.19.0",
+    "eslint": "^4.0.0",
     "eslint-plugin-async-await": "^0.0.0",
     "eslint-plugin-jsx": "^0.0.2",
     "eslint-plugin-react": "^7.0.1",
